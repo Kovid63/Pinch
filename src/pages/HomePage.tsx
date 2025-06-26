@@ -1,13 +1,17 @@
-
+import Navbar from "../components/navbar";
 import SearchBar from "../components/searchBar";
 
-function HomePage(){
+function HomePage() {
+  return (
+    <div>
+      <div className="flex gap-4">
+        <h1>Pinch</h1>
+        <Navbar />
+      </div>
 
-    return(
-        <>
-            <SearchBar/>
-        </>
-    )
+      <SearchBar />
+    </div>
+  );
 }
 
 export default HomePage;
