@@ -3,9 +3,8 @@
 function Navbar(){
 
     return(
-        <nav className="">
-
-            <ul>
+        <nav >
+            <ul className="flex flex-row gap-10">
                 <li>All</li>
                 <li>Movies</li>
                 <li>TV Shows</li>

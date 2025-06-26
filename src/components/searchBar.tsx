@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import api_searchBar from "../api/get_searchBar";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 function SearchBar() {
   const [search_text, setSearch_text] = useState("");
-
-  // const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e)=>{
-  //     setSearch_text(e.target.value);
-  // }
+  const [searchResult, setSearchResult] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!search_text) return;
+    if (!search_text) return setSearchResult([]);
     const fetch_data = async () => {
+
       try {
         const response = await api_searchBar.get(`search/multi`, {
           params: {
@@ -20,11 +19,9 @@ function SearchBar() {
           },
         });
 
-        const filtered = response.data.results.filter(
+        const filtered = response.data.results.filter(  
           (item: any) => item.media_type === "movie" || item.media_type === "tv"
-        );
-        console.log(
-          filtered.map((item: any) => {
+        ).map((item: any) => {
             const arr = {
               title: "",
               poster_path: item.poster_path,
@@ -39,11 +36,10 @@ function SearchBar() {
               arr["year"] = item.release_date.split("-")[0];
               arr["title"] = item.title;
             }
-
             return arr;
-          })
-        );
+          });
 
+        setSearchResult(filtered);
       } catch (err) {
         console.log(err);
       }
@@ -52,7 +48,9 @@ function SearchBar() {
   }, [search_text]);
 
   return (
-    <>
+    <div className="flex flex-col">
+
+    <div className="flex gap-2.5">
       <input
         type="text"
         name="searchBar"
@@ -60,10 +58,38 @@ function SearchBar() {
         value={search_text}
         onChange={(e) => setSearch_text(e.target.value)}
         placeholder="Type to search..."
+        className="min-w-xl p-3  bg-gray-900 rounded-md"
       />
-      <button className="bg-blue-500">enter</button>
-      <p>{search_text}</p>
-    </>
+      <button className="bg-gray-800 rounded-md hover:cursor-grab "><MagnifyingGlassIcon className="w-10 h-7" /></button>
+       </div>
+
+      <div className="flex flex-col max-w-xl max-h-60 bg-gray-900 overflow-y-auto">
+        {searchResult.length > 0 && (
+          searchResult.map((item)=>(
+
+            <div className="flex p-1">
+              {item.poster_path && (
+                <img src={`https://image.tmdb.org/t/p/w45${item.poster_path}`} 
+                alt={item.poster_path}
+                className="w-10 h-13" 
+                />
+              )}
+
+              <div className="px-5 mt-4">
+              {item.title}
+
+              {item.media_type.toUpperCase()} • {item.year}
+
+              </div>
+            </div>
+
+          ))
+        )}
+
+      </div>
+
+   
+    </div>
   );
 }
 
