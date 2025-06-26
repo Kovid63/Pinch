@@ -61,7 +61,7 @@ function SearchBar() {
         onChange={(e) => setSearch_text(e.target.value)}
         placeholder="Type to search..."
       />
-      <button></button>
+      <button className="bg-blue-500">enter</button>
       <p>{search_text}</p>
     </>
   );
