@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api_searchBar from "../api/get_searchBar";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 function SearchBar() {
   const [search_text, setSearch_text] = useState("");
@@ -52,7 +53,7 @@ function SearchBar() {
   }, [search_text]);
 
   return (
-    <>
+    <div className="flex gap-2.5">
       <input
         type="text"
         name="searchBar"
@@ -60,10 +61,11 @@ function SearchBar() {
         value={search_text}
         onChange={(e) => setSearch_text(e.target.value)}
         placeholder="Type to search..."
+        className="min-w-xl p-2  bg-gray-900 rounded-md"
       />
-      <button className="bg-blue-500">enter</button>
-      <p>{search_text}</p>
-    </>
+      <button className="bg-gray-800 rounded-md "><MagnifyingGlassIcon className="w-10 h-7 text-gray-500" /></button>
+      {/* <p>{search_text}</p> */}
+    </div>
   );
 }
 
