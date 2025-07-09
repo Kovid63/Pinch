@@ -77,7 +77,7 @@ function SearchBar() {
                 className="w-10 h-13" 
                 />
               )}
-
+    
               <div className="px-5 mt-4">
               {item.title}
 
