@@ -7,7 +7,11 @@ function SearchBar() {
   const [searchResult, setSearchResult] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!search_text) return setSearchResult([]);
+    if (!search_text){
+      setSearchResult([]);
+      return;
+    }
+
     const fetch_data = async () => {
 
       try {
@@ -20,8 +24,7 @@ function SearchBar() {
         });
 
         const filtered = response.data.results.filter(  
-          (item: any) => item.media_type === "movie" || item.media_type === "tv"
-        ).map((item: any) => {
+          (item: any) => item.media_type === "movie" || item.media_type === "tv").map((item: any) => {
             const arr = {
               title: "",
               poster_path: item.poster_path,
@@ -58,16 +61,16 @@ function SearchBar() {
         value={search_text}
         onChange={(e) => setSearch_text(e.target.value)}
         placeholder="Type to search..."
-        className="min-w-xl p-3  bg-gray-900 rounded-md"
+        className="min-w-xl p-3  bg-gray-900 rounded-md focus:outline-none "
       />
-      <button className="bg-gray-800 rounded-md hover:cursor-grab "><MagnifyingGlassIcon className="w-10 h-7" /></button>
+      <button className="bg-gray-800 rounded-md cursor-pointer  "><MagnifyingGlassIcon className="w-10 h-7" /></button>
        </div>
 
       <div className="flex flex-col max-w-xl max-h-60 bg-gray-900 overflow-y-auto">
         {searchResult.length > 0 && (
           searchResult.map((item)=>(
 
-            <div className="flex p-1">
+            <div className="flex p-1 cursor-pointer ">
               {item.poster_path && (
                 <img src={`https://image.tmdb.org/t/p/w45${item.poster_path}`} 
                 alt={item.poster_path}
