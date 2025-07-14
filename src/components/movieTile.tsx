@@ -9,7 +9,7 @@
              className="absolute w-44 h-54 mt-0.5 ml-0.5 rounded-xl " />
             <div className="absolute  w-44 h-54 bg-black/20 backdrop-saturate-125 backdrop-contrast-100 border-gray-300 shadow-lg rounded-xl "></div>
             <div className="absolute  w-44 bg-white/10 h-54 backdrop-saturate-125 backdrop-contrast-125 border-gray-100 shadow-lg rounded-xl"></div>
-        <p>Hekko</p>
+        <p>{props.title}</p>
         </div>
     )
 } 
