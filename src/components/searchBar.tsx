@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import api_searchBar from "../api/get_searchBar";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import useDebounce from "../customHooks/useDebounce";
 
 function SearchBar() {
   const [search_text, setSearch_text] = useState("");
   const [searchResult, setSearchResult] = useState<any[]>([]);
+  const debouncedVal = useDebounce(search_text,200);
 
   useEffect(() => {
-    if (!search_text){
+    if (!debouncedVal){
       setSearchResult([]);
       return;
     }
+
+    const controller = new AbortController();
 
     const fetch_data = async () => {
 
@@ -18,8 +22,9 @@ function SearchBar() {
         const response = await api_searchBar.get(`search/multi`, {
           params: {
             api_key: import.meta.env.VITE_TMDB_API_KEY,
-            query: search_text,
+            query: debouncedVal,
             page: 1,
+            signal:controller.signal
           },
         });
 
@@ -46,9 +51,11 @@ function SearchBar() {
       } catch (err) {
         console.log(err);
       }
+
+      return ()=> controller.abort();
     };
     fetch_data();
-  }, [search_text]);
+  }, [debouncedVal]);
 
   return (
     <div className="flex flex-col">
