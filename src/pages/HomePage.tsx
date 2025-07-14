@@ -1,6 +1,6 @@
 import Navbar from "../components/navbar";
 import SearchBar from "../components/searchBar";
-
+import MovieTile from "../components/movieTile";
 function HomePage() {
   return (
     <div className="w-full">
@@ -13,6 +13,11 @@ function HomePage() {
       <div className="flex justify-center mt-18 ">
         <SearchBar />
       </div>
+
+      <div className="flex justify-center">
+        <MovieTile/>
+      </div>
+      
     </div>
   );
 }

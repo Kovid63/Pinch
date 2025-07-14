@@ -1,27 +1,35 @@
 import { useEffect, useState } from "react";
 import api_searchBar from "../api/get_searchBar";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import useDebounce from "../customHooks/useDebounce";
 
 function SearchBar() {
   const [search_text, setSearch_text] = useState("");
   const [searchResult, setSearchResult] = useState<any[]>([]);
+  const debouncedVal = useDebounce(search_text,200);
 
   useEffect(() => {
-    if (!search_text) return setSearchResult([]);
+    if (!debouncedVal){
+      setSearchResult([]);
+      return;
+    }
+
+    const controller = new AbortController();
+
     const fetch_data = async () => {
 
       try {
         const response = await api_searchBar.get(`search/multi`, {
           params: {
             api_key: import.meta.env.VITE_TMDB_API_KEY,
-            query: search_text,
+            query: debouncedVal,
             page: 1,
+            signal:controller.signal
           },
         });
 
         const filtered = response.data.results.filter(  
-          (item: any) => item.media_type === "movie" || item.media_type === "tv"
-        ).map((item: any) => {
+          (item: any) => item.media_type === "movie" || item.media_type === "tv").map((item: any) => {
             const arr = {
               title: "",
               poster_path: item.poster_path,
@@ -43,9 +51,11 @@ function SearchBar() {
       } catch (err) {
         console.log(err);
       }
+
+      return ()=> controller.abort();
     };
     fetch_data();
-  }, [search_text]);
+  }, [debouncedVal]);
 
   return (
     <div className="flex flex-col">
@@ -58,23 +68,23 @@ function SearchBar() {
         value={search_text}
         onChange={(e) => setSearch_text(e.target.value)}
         placeholder="Type to search..."
-        className="min-w-xl p-3  bg-gray-900 rounded-md"
+        className="min-w-xl p-3  bg-gray-900 rounded-md focus:outline-none "
       />
-      <button className="bg-gray-800 rounded-md hover:cursor-grab "><MagnifyingGlassIcon className="w-10 h-7" /></button>
+      <button className="bg-gray-800 rounded-md cursor-pointer  "><MagnifyingGlassIcon className="w-10 h-7" /></button>
        </div>
 
       <div className="flex flex-col max-w-xl max-h-60 bg-gray-900 overflow-y-auto">
         {searchResult.length > 0 && (
           searchResult.map((item)=>(
 
-            <div className="flex p-1">
+            <div className="flex p-1 cursor-pointer ">
               {item.poster_path && (
                 <img src={`https://image.tmdb.org/t/p/w45${item.poster_path}`} 
                 alt={item.poster_path}
                 className="w-10 h-13" 
                 />
               )}
-
+    
               <div className="px-5 mt-4">
               {item.title}
 
